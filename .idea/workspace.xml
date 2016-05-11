@@ -1940,7 +1940,13 @@
       <option name="project" value="LOCAL" />
       <updated>1462956632673</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="第3次提交">
+      <created>1462956718217</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1462956718217</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1983,7 +1989,8 @@
     <MESSAGE value="首次提交，版本控制所有工程文件" />
     <MESSAGE value="提交工作区间文件" />
     <MESSAGE value="第二次提交" />
-    <option name="LAST_COMMIT_MESSAGE" value="第二次提交" />
+    <MESSAGE value="第3次提交" />
+    <option name="LAST_COMMIT_MESSAGE" value="第3次提交" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
