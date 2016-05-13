@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.coolweather.app.model.City;
-import com.coolweather.app.model.Country;
+import com.coolweather.app.model.County;
 import com.coolweather.app.model.Province;
 
 import java.util.ArrayList;
@@ -38,6 +38,7 @@ public class CoolWeatherDB {
 	}
 
 	/* 将Province实例存储到数据库 */
+
 	public void saveProvince(Province province) {
 		if (province != null) {
 			ContentValues values = new ContentValues();
@@ -101,37 +102,37 @@ public class CoolWeatherDB {
 
 	}
 
-    /* 将Country实例存储到数据库 */
-    public void saveCountry(Country country) {
-        if (country != null) {
-            ContentValues values = new ContentValues();
-            values.put("Country_name", country.getCountryName());
-            values.put("Country_code", country.getCountryCode());
-            values.put("city_id", country.getCityId());
-            db.insert("Country", null, values);
-        }
+	/* 将County实例存储到数据库 */
+	public void saveCounty(County county) {
+		if (county != null) {
+			ContentValues values = new ContentValues();
+			values.put("County_name", county.getCountyName());
+			values.put("County_code", county.getCountyCode());
+			values.put("city_id", county.getCityId());
+			db.insert("County", null, values);
+		}
 
-    }
+	}
 
-    /* 从数据库读取全国所有的县信息 */
-    public List<Country> loadCounties(int cityId) {
-        List<Country> list = new ArrayList<Country>();
-        Cursor cursor = db.query("Country", null, "cityId=?", new String[] { String.valueOf(cityId) }, null, null, null);
-        if (cursor.moveToFirst()) {
-            do {
-                Country country = new Country();
-                country.setId(cursor.getInt(cursor.getColumnIndex("id")));
-                country.setCountryName(cursor.getString(cursor.getColumnIndex("country_name")));
-                country.setCountryCode(cursor.getString(cursor.getColumnIndex("country_code")));
-                country.setCityId(cityId);
-                list.add(country);
-            } while (cursor.moveToNext());
-        }
-        if (cursor != null) {
-            cursor.close();
-        }
-        return list;
+	/* 从数据库读取全国所有的县信息 */
+	public List<County> loadCounties(int cityId) {
+		List<County> list = new ArrayList<County>();
+		Cursor cursor = db.query("County", null, "cityId=?", new String[] { String.valueOf(cityId) }, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				County county = new County();
+				county.setId(cursor.getInt(cursor.getColumnIndex("id")));
+				county.setCountyName(cursor.getString(cursor.getColumnIndex("county_name")));
+				county.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
+				county.setCityId(cityId);
+				list.add(county);
+			} while (cursor.moveToNext());
+		}
+		if (cursor != null) {
+			cursor.close();
+		}
+		return list;
 
-    }
+	}
 
 }
