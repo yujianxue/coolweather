@@ -3,6 +3,7 @@ package com.coolweather.app.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -44,6 +45,7 @@ public class ChooseAreaActivity extends Activity {
     private City selectedCity;
     /* 当前选中的级别 */
     private int currentLevel;
+    private String Tag="----ChooseAreaActivity----";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class ChooseAreaActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (currentLevel == LEVEL_PROVINCE) {
+
                     selectedProvince = provinceList.get(position);
                     queryCities();
                 } else if (currentLevel == LEVEL_CITY) {
@@ -73,6 +76,7 @@ public class ChooseAreaActivity extends Activity {
 
     /*查询全国所有的省，优先从数据库查询，如果没有查询到再到服务器上查询*/
     private void queryProvinces() {
+        Log.d(Tag,"queryProvinces");
         provinceList = coolWeatherDB.loadProvince();
         if (provinceList.size() > 0) {
             dataList.clear();
@@ -93,7 +97,9 @@ public class ChooseAreaActivity extends Activity {
 
     /*查询选中省内所有的市，优先从数据库查询，如果没有查询到再到服务器上查询*/
     private void queryCities() {
+        Log.d(Tag,"queryCities");
         cityList = coolWeatherDB.loadCities(selectedProvince.getId());
+
         if (cityList.size() > 0) {
             dataList.clear();
             for (City city : cityList) {
@@ -113,6 +119,7 @@ public class ChooseAreaActivity extends Activity {
 
     /*查询选中省内所有的县，优先从数据库查询，如果没有查询到再到服务器上查询*/
     private void queryCounties() {
+        Log.d(Tag,"queryCounties");
         countyList = coolWeatherDB.loadCounties(selectedCity.getId());
         if (countyList.size() > 0) {
             dataList.clear();
