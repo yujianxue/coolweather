@@ -157,13 +157,17 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	// 根据传入的代号和类型从服务器上查询省市县数据
-	private void queryFromServer(final String code, final String type) {
+	private void queryFromServer(final String code, final String type) {// 考虑吧code参数去掉
 		String address;
+		// city19,1901|南京,//01|北京，02|上海
 		if (!TextUtils.isEmpty(code)) {
 			address = "http://www.weather.com.cn/data/list3/city" + code + ".xml";
 		} else {
 			address = "http://www.weather.com.cn/data/list3/city.xml";
 		}
+
+		// address =
+		// "http://v.juhe.cn/weather/citys?key=ed514ca722213c20b31b910bf237cd1e";
 		showProgressDialog();
 		HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
 			@Override
