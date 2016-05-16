@@ -30,9 +30,9 @@ public class WeatherActivity extends Activity {
     private TextView publishText;
     // 用于显示天气描述信息
     private TextView weatherDespText;
-    // 用于显示气温1
+    // 用于显示当前温度
     private TextView temp1Text;
-    // 用于显示气温2
+    // 用于显示温度范围
     private TextView temp2Text;
     // 用于显示当前日期
     private TextView currentDateText;
@@ -82,9 +82,10 @@ public class WeatherActivity extends Activity {
 
 
     //根据传入的地址和类型去向服务器查询天气代号或者天气信息
-    private void queryFromServer(final String address, final String type) {
+    private void  queryFromServer(final String address, final String type) {
         //测试用
-        String response = "{\"weatherinfo\":{\"city\":\"北京\",\"cityid\":\"101010100\",\"temp1\":\"21°C\",\"temp2\":\"9°C\",\"weather\":\"多云转小雨\",\"ptime\":\"11:00\"} }";
+        String response=" {\"resultcode\":\"200\",\"reason\":\"successed!\",\"result\":{\"sk\":{\"temp\":\"27\",\"wind_direction\":\"西风\",\"wind_strength\":\"2级\",\"humidity\":\"24%\",\"time\":\"11:18\"},\"today\":{\"temperature\":\"18℃~30℃\",\"weather\":\"晴\",\"weather_id\":{\"fa\":\"00\",\"fb\":\"00\"},\"wind\":\"西南风3-4 级\",\"week\":\"星期一\",\"city\":\"天津\",\"date_y\":\"2016年05月16日\",\"dressing_index\":\"热\",\"dressing_advice\":\"天气热，建议着短裙、短裤、短薄外套、T恤等夏季服装。\",\"uv_index\":\"很强\",\"comfort_index\":\"\",\"wash_index\":\"较适宜\",\"travel_index\":\"较适宜\",\"exercise_index\":\"较适宜\",\"drying_index\":\"\"},\"future\":[{\"temperature\":\"18℃~30℃\",\"weather\":\"晴\",\"weather_id\":{\"fa\":\"00\",\"fb\":\"00\"},\"wind\":\"西南风3-4 级\",\"week\":\"星期一\",\"date\":\"20160516\"},{\"temperature\":\"19℃~32℃\",\"weather\":\"晴转多云\",\"weather_id\":{\"fa\":\"00\",\"fb\":\"01\"},\"wind\":\"西南风3-4 级\",\"week\":\"星期二\",\"date\":\"20160517\"},{\"temperature\":\"18℃~29℃\",\"weather\":\"阴\",\"weather_id\":{\"fa\":\"02\",\"fb\":\"02\"},\"wind\":\"南风3-4 级\",\"week\":\"星期三\",\"date\":\"20160518\"},{\"temperature\":\"18℃~28℃\",\"weather\":\"多云\",\"weather_id\":{\"fa\":\"01\",\"fb\":\"01\"},\"wind\":\"东南风微风\",\"week\":\"星期四\",\"date\":\"20160519\"},{\"temperature\":\"18℃~28℃\",\"weather\":\"阴\",\"weather_id\":{\"fa\":\"02\",\"fb\":\"02\"},\"wind\":\"东南风微风\",\"week\":\"星期五\",\"date\":\"20160520\"},{\"temperature\":\"19℃~32℃\",\"weather\":\"晴转多云\",\"weather_id\":{\"fa\":\"00\",\"fb\":\"01\"},\"wind\":\"西南风3-4 级\",\"week\":\"星期六\",\"date\":\"20160521\"},{\"temperature\":\"18℃~29℃\",\"weather\":\"阴\",\"weather_id\":{\"fa\":\"02\",\"fb\":\"02\"},\"wind\":\"南风3-4 级\",\"week\":\"星期日\",\"date\":\"20160522\"}]},\"error_code\":0}";
+       // String response = "{\"weatherinfo\":{\"city\":\"北京\",\"cityid\":\"101010100\",\"temp1\":\"21°C\",\"temp2\":\"9°C\",\"weather\":\"多云转小雨\",\"ptime\":\"11:00\"} }";
         //String response = "{\"city\":\"北京\",\"cityid\":\"101010100\",\"temp1\":\"21°C\",\"temp2\":\"9°C\",\"weather\":\"多云转小雨\"，\"ptime\":\"11:00\"} ";
 
         Log.d("tag", "queryFromServer");
@@ -146,7 +147,7 @@ public class WeatherActivity extends Activity {
     private void showWeather() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         cityNameText.setText(prefs.getString("city_name", ""));
-        temp1Text.setText(prefs.getString("temp1", ""));
+        temp1Text.setText(prefs.getString("temp1", "")+"°C");
         temp2Text.setText(prefs.getString("temp2", ""));
         weatherDespText.setText(prefs.getString("weather_desp", ""));
         publishText.setText("今天" + prefs.getString("publish_time", "") + "发布");

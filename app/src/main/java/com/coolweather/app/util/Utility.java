@@ -23,116 +23,129 @@ import java.util.Locale;
  * Created by Administrator on 2016/5/12.
  */
 public class Utility {
-    /* 解析和处理服务器返回的省级数据 */
-    // split() 方法用于把一个字符串分割成字符串数组
-    public synchronized static boolean handleProvincesResponse(CoolWeatherDB coolWeatherDB, String response) {
-        if (!TextUtils.isEmpty(response)) {
-            String[] allProvinces = response.split(",");
-            if (allProvinces != null && allProvinces.length > 0) {
-                for (String p : allProvinces) {
-                    String[] array = p.split("\\|");
-                    Province province = new Province();
-                    province.setProvinceCode(array[0]);
-                    province.setProvinceName(array[1]);
-                    // 将解析出来的数据存储到Province表
-                    coolWeatherDB.saveProvince(province);
-                }
-                return true;
-            }
+	/* 解析和处理服务器返回的省级数据 */
+	// split() 方法用于把一个字符串分割成字符串数组
+	public synchronized static boolean handleProvincesResponse(CoolWeatherDB coolWeatherDB, String response) {
+		if (!TextUtils.isEmpty(response)) {
+			String[] allProvinces = response.split(",");
+			if (allProvinces != null && allProvinces.length > 0) {
+				for (String p : allProvinces) {
+					String[] array = p.split("\\|");
+					Province province = new Province();
+					province.setProvinceCode(array[0]);
+					province.setProvinceName(array[1]);
+					// 将解析出来的数据存储到Province表
+					coolWeatherDB.saveProvince(province);
+				}
+				return true;
+			}
 
-        }
-        return false;
+		}
+		return false;
 
-    }
+	}
 
-    /* 解析和处理服务器返回的市级数据 */
-    public static boolean handleCitesResponse(CoolWeatherDB coolWeatherDB, String response, int provinceId) {
-        if (!TextUtils.isEmpty(response)) {
-            String[] allCities = response.split(",");
-            if (allCities != null && allCities.length > 0) {
-                for (String c : allCities) {
-                    String[] array = c.split("\\|");
-                    City city = new City();
-                    city.setCityCode(array[0]);
-                    city.setCityName(array[1]);
-                    city.setProvinceId(provinceId);
-                    // 将解析出来的数据存储到City表
-                    coolWeatherDB.saveCity(city);
-                }
-                return true;
-            }
+	/* 解析和处理服务器返回的市级数据 */
+	public static boolean handleCitesResponse(CoolWeatherDB coolWeatherDB, String response, int provinceId) {
+		if (!TextUtils.isEmpty(response)) {
+			String[] allCities = response.split(",");
+			if (allCities != null && allCities.length > 0) {
+				for (String c : allCities) {
+					String[] array = c.split("\\|");
+					City city = new City();
+					city.setCityCode(array[0]);
+					city.setCityName(array[1]);
+					city.setProvinceId(provinceId);
+					// 将解析出来的数据存储到City表
+					coolWeatherDB.saveCity(city);
+				}
+				return true;
+			}
 
-        }
-        return false;
+		}
+		return false;
 
-    }
+	}
 
-    /* 解析和处理服务器返回的县级数据 */
-    public static boolean handleCountiesResponse(CoolWeatherDB coolWeatherDB, String response, int cityId) {
-        if (!TextUtils.isEmpty(response)) {
-            String[] allCounties = response.split(",");
-            if (allCounties != null && allCounties.length > 0) {
-                for (String c : allCounties) {
-                    String[] array = c.split("\\|");
-                    County county = new County();
-                    county.setCountyCode(array[0]);
-                    county.setCountyName(array[1]);
-                    county.setCityId(cityId);
-                    // 将解析出来的数据存储到County表
-                    coolWeatherDB.saveCounty(county);
-                }
-                return true;
-            }
+	/* 解析和处理服务器返回的县级数据 */
+	public static boolean handleCountiesResponse(CoolWeatherDB coolWeatherDB, String response, int cityId) {
+		if (!TextUtils.isEmpty(response)) {
+			String[] allCounties = response.split(",");
+			if (allCounties != null && allCounties.length > 0) {
+				for (String c : allCounties) {
+					String[] array = c.split("\\|");
+					County county = new County();
+					county.setCountyCode(array[0]);
+					county.setCountyName(array[1]);
+					county.setCityId(cityId);
+					// 将解析出来的数据存储到County表
+					coolWeatherDB.saveCounty(county);
+				}
+				return true;
+			}
 
-        }
-        return false;
+		}
+		return false;
 
-    }
+	}
 
-    // JSON格式数据为：
-    // response
-    /*
-     * {"weatherinfo":
+	// JSON格式数据为：
+	// response
+	/*
+	 * {"weatherinfo":
 	 * {“city”:"北京","cityid":"101010100","temp1":"21°C","temp2":"9°C","weather":
 	 * "多云转小雨"，"ptime":"11:00"} }
 	 */
+	// String response="
+	// {\"resultcode\":\"200\",\"reason\":\"successed!\",\"result\":{\"sk\":{\"temp\":\"27\",\"wind_direction\":\"西风\",\"wind_strength\":\"2级\",\"humidity\":\"24%\",\"time\":\"11:18\"},\"today\":{\"temperature\":\"18℃~30℃\",\"weather\":\"晴\",\"weather_id\":{\"fa\":\"00\",\"fb\":\"00\"},\"wind\":\"西南风3-4
+	// 级\",\"week\":\"星期一\",\"city\":\"天津\",\"date_y\":\"2016年05月16日\",\"dressing_index\":\"热\",\"dressing_advice\":\"天气热，建议着短裙、短裤、短薄外套、T恤等夏季服装。\",\"uv_index\":\"很强\",\"comfort_index\":\"\",\"wash_index\":\"较适宜\",\"travel_index\":\"较适宜\",\"exercise_index\":\"较适宜\",\"drying_index\":\"\"},\"future\":[{\"temperature\":\"18℃~30℃\",\"weather\":\"晴\",\"weather_id\":{\"fa\":\"00\",\"fb\":\"00\"},\"wind\":\"西南风3-4
+	// 级\",\"week\":\"星期一\",\"date\":\"20160516\"},{\"temperature\":\"19℃~32℃\",\"weather\":\"晴转多云\",\"weather_id\":{\"fa\":\"00\",\"fb\":\"01\"},\"wind\":\"西南风3-4
+	// 级\",\"week\":\"星期二\",\"date\":\"20160517\"},{\"temperature\":\"18℃~29℃\",\"weather\":\"阴\",\"weather_id\":{\"fa\":\"02\",\"fb\":\"02\"},\"wind\":\"南风3-4
+	// 级\",\"week\":\"星期三\",\"date\":\"20160518\"},{\"temperature\":\"18℃~28℃\",\"weather\":\"多云\",\"weather_id\":{\"fa\":\"01\",\"fb\":\"01\"},\"wind\":\"东南风微风\",\"week\":\"星期四\",\"date\":\"20160519\"},{\"temperature\":\"18℃~28℃\",\"weather\":\"阴\",\"weather_id\":{\"fa\":\"02\",\"fb\":\"02\"},\"wind\":\"东南风微风\",\"week\":\"星期五\",\"date\":\"20160520\"},{\"temperature\":\"19℃~32℃\",\"weather\":\"晴转多云\",\"weather_id\":{\"fa\":\"00\",\"fb\":\"01\"},\"wind\":\"西南风3-4
+	// 级\",\"week\":\"星期六\",\"date\":\"20160521\"},{\"temperature\":\"18℃~29℃\",\"weather\":\"阴\",\"weather_id\":{\"fa\":\"02\",\"fb\":\"02\"},\"wind\":\"南风3-4
+	// 级\",\"week\":\"星期日\",\"date\":\"20160522\"}]},\"error_code\":0}";
 
-    /* 解析服务器返回的JSON数据，并将解析出的数据存储到本地 */
-    public static void handleWeatherResponse(Context context, String response) {
-        Log.d("tag", "handleWeatherResponse");
-        try {
-            JSONObject jsonObject = new JSONObject(response);
-            JSONObject weatherInfo = jsonObject.getJSONObject("weatherinfo");
-            String cityName = weatherInfo.getString("city");
-            String weatherCode = weatherInfo.getString("cityid");
-            String temp1 = weatherInfo.getString("temp1");
-            String temp2 = weatherInfo.getString("temp2");
-            String weatherDesp = weatherInfo.getString("weather");
-            String publishTime = weatherInfo.getString("ptime");
-            saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, publishTime);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+	/* 解析服务器返回的JSON数据，并将解析出的数据存储到本地 */
+	public static void handleWeatherResponse(Context context, String response) {
+		Log.d("tag", "handleWeatherResponse");
+		try {
+			JSONObject jsonObject = new JSONObject(response);
+			JSONObject result = jsonObject.getJSONObject("result");
+			JSONObject sk = result.getJSONObject("sk");
+			JSONObject today = result.getJSONObject("today");
+			//String weatherCode = weatherInfo.getString("cityid");
+			String cityName = today.getString("city");
+			String temp1 = sk.getString("temp");
+			String temp2 = today.getString("temperature");
+			String weatherDesp = today.getString("weather");
+			String publishTime = sk.getString("time");
+			Log.d("tag",publishTime);
+			saveWeatherInfo(context, cityName, temp1, temp2, weatherDesp,publishTime);
+			// saveWeatherInfo(context, cityName, weatherCode, temp1, temp2,
+			// weatherDesp, publishTime)
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 
-    }
+	}
 
-    /*将服务器返回的所有天气信息存储到SharedPreferences文件中*/
-    //SharedPreferences是Android平台上一个轻量级的存储类，用来保存应用的一些常用配置
-    private static void saveWeatherInfo(Context context, String cityName, String weatherCode, String temp1, String temp2, String weatherDesp, String publishTime) {
-        Log.d("tag", "saveWeatherInfo");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putBoolean("city_selected", true);
-        editor.putString("city_name", cityName);
-        editor.putString("weather_code", weatherCode);
-        editor.putString("temp1", temp1);
-        editor.putString("temp2", temp2);
-        editor.putString("weather_desp", weatherDesp);
-        editor.putString("publish_time", publishTime);
-        editor.putString("current_date", sdf.format(new Date()));
-        editor.commit();
+	/* 将服务器返回的所有天气信息存储到SharedPreferences文件中 */
+	// SharedPreferences是Android平台上一个轻量级的存储类，用来保存应用的一些常用配置
+	private static void saveWeatherInfo(Context context, String cityName, String temp1, String temp2, String weatherDesp,
+			String publishTime) {
+		Log.d("tag", "saveWeatherInfo");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
+		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+		editor.putBoolean("city_selected", true);
+		editor.putString("city_name", cityName);
+		// editor.putString("weather_code", weatherCode);//可不用
+		editor.putString("temp1", temp1);
+		editor.putString("temp2", temp2);
+		editor.putString("weather_desp", weatherDesp);
+		editor.putString("publish_time", publishTime);
+		editor.putString("current_date", sdf.format(new Date()));
+		editor.commit();
 
-
-    }
+	}
 
 }
