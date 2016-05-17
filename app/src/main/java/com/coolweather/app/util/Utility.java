@@ -1,8 +1,10 @@
 package com.coolweather.app.util;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.nfc.Tag;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,6 +14,7 @@ import com.coolweather.app.model.City;
 import com.coolweather.app.model.County;
 import com.coolweather.app.model.Province;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,64 +29,97 @@ public class Utility {
 	/* 解析和处理服务器返回的省级数据 */
 	// split() 方法用于把一个字符串分割成字符串数组
 	public synchronized static boolean handleProvincesResponse(CoolWeatherDB coolWeatherDB, String response) {
+
 		if (!TextUtils.isEmpty(response)) {
-			String[] allProvinces = response.split(",");
-			if (allProvinces != null && allProvinces.length > 0) {
-				for (String p : allProvinces) {
-					String[] array = p.split("\\|");
+			Log.d("tag", "handleProvincesResponse");
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				JSONArray jsonArray = jsonObject.getJSONArray("result");
+				for (int i = 0; i < jsonArray.length(); i++) {
 					Province province = new Province();
-					province.setProvinceCode(array[0]);
-					province.setProvinceName(array[1]);
+					province.setProvinceName(jsonArray.getJSONObject(i).getString("province"));
 					// 将解析出来的数据存储到Province表
 					coolWeatherDB.saveProvince(province);
+					Log.d("tag", String.valueOf(i));
 				}
+
 				return true;
+
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
 
+			// String[] allProvinces = result.split(",");
+
+			/*
+			 * //String[] allProvinces = result.split(","); Log.d("tagpro",
+			 * allProvinces[0]); if (allProvinces != null && allProvinces.length
+			 * > 0) { for (String p : allProvinces) { String[] array =
+			 * p.split("\\|"); Province province = new Province();
+			 * province.setProvinceCode(array[0]);
+			 * province.setProvinceName(array[1]); // 将解析出来的数据存储到Province表
+			 * coolWeatherDB.saveProvince(province); } return true; }
+			 */
 		}
 		return false;
 
 	}
 
 	/* 解析和处理服务器返回的市级数据 */
-	public static boolean handleCitesResponse(CoolWeatherDB coolWeatherDB, String response, int provinceId) {
+	public static boolean handleCitesResponse(CoolWeatherDB coolWeatherDB, String response, String provinceName) {
 		if (!TextUtils.isEmpty(response)) {
-			String[] allCities = response.split(",");
-			if (allCities != null && allCities.length > 0) {
-				for (String c : allCities) {
-					String[] array = c.split("\\|");
+			Log.d("tag", "handleCitesResponse");
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				JSONArray jsonArray = jsonObject.getJSONArray("result");
+				for (int i = 0; i < jsonArray.length(); i++) {
 					City city = new City();
-					city.setCityCode(array[0]);
-					city.setCityName(array[1]);
-					city.setProvinceId(provinceId);
-					// 将解析出来的数据存储到City表
-					coolWeatherDB.saveCity(city);
+					//比较2个字符串用    A.equals(B)
+					if (jsonArray.getJSONObject(i).getString("province").equals(provinceName)) {
+						city.setCityName(jsonArray.getJSONObject(i).getString("city"));
+						city.setProvinceName(provinceName);
+						// 将解析出来的数据存储到City表
+						coolWeatherDB.saveCity(city);
+					}
+
 				}
+
 				return true;
+
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
 
 		}
+
 		return false;
 
 	}
 
 	/* 解析和处理服务器返回的县级数据 */
-	public static boolean handleCountiesResponse(CoolWeatherDB coolWeatherDB, String response, int cityId) {
+	public static boolean handleCountiesResponse(CoolWeatherDB coolWeatherDB, String response, String cityName) {
 		if (!TextUtils.isEmpty(response)) {
-			String[] allCounties = response.split(",");
-			if (allCounties != null && allCounties.length > 0) {
-				for (String c : allCounties) {
-					String[] array = c.split("\\|");
+			Log.d("tag", "handleCountiesResponse");
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				JSONArray jsonArray = jsonObject.getJSONArray("result");
+				for (int i = 0; i < jsonArray.length(); i++) {
 					County county = new County();
-					county.setCountyCode(array[0]);
-					county.setCountyName(array[1]);
-					county.setCityId(cityId);
-					// 将解析出来的数据存储到County表
-					coolWeatherDB.saveCounty(county);
-				}
-				return true;
-			}
+					//比较2个字符串用    A.equals(B)
+					if (jsonArray.getJSONObject(i).getString("city").equals(cityName)) {
+						county.setCountyName(jsonArray.getJSONObject(i).getString("district"));
+						county.setCityName(cityName);
+						// 将解析出来的数据存储到County表
+						coolWeatherDB.saveCounty(county);
+					}
 
+				}
+
+				return true;
+
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 
@@ -113,14 +149,14 @@ public class Utility {
 			JSONObject result = jsonObject.getJSONObject("result");
 			JSONObject sk = result.getJSONObject("sk");
 			JSONObject today = result.getJSONObject("today");
-			//String weatherCode = weatherInfo.getString("cityid");
+			// String weatherCode = weatherInfo.getString("cityid");
 			String cityName = today.getString("city");
 			String temp1 = sk.getString("temp");
 			String temp2 = today.getString("temperature");
 			String weatherDesp = today.getString("weather");
 			String publishTime = sk.getString("time");
-			Log.d("tag",publishTime);
-			saveWeatherInfo(context, cityName, temp1, temp2, weatherDesp,publishTime);
+			Log.d("tag", publishTime);
+			saveWeatherInfo(context, cityName, temp1, temp2, weatherDesp, publishTime);
 			// saveWeatherInfo(context, cityName, weatherCode, temp1, temp2,
 			// weatherDesp, publishTime)
 		} catch (JSONException e) {

@@ -6,8 +6,8 @@ package com.coolweather.app.model;
 public class City {
 	private int id;
 	private String cityName;
-	private String cityCode;
-	private int provinceId;
+	//private String cityCode;
+	private String provinceName;
 
 	public int getId() {
 		return id;
@@ -25,19 +25,21 @@ public class City {
 		this.cityName = cityName;
 	}
 
-	public String getCityCode() {
-		return cityCode;
+//	public String getCityCode() {
+//		return cityCode;
+//	}
+//
+//	public void setCityCode(String cityCode) {
+//		this.cityCode = cityCode;
+//	}
+
+	public String getProvinceName() {
+		return provinceName;
 	}
 
-	public void setCityCode(String cityCode) {
-		this.cityCode = cityCode;
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
 	}
 
-	public int getProvinceId() {
-		return provinceId;
-	}
 
-	public void setProvinceId(int provinceId) {
-		this.provinceId = provinceId;
-	}
 }
