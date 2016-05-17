@@ -66,7 +66,7 @@ public class WeatherActivity extends Activity {
 
 	}
 
-	// 查询县级代号所对应的天气代号
+	// 查询县级名称所对应的天气
 	private void queryWeather(String countyName) {
 		Log.d("tag", "queryWeather");
 		String address = "http://v.juhe.cn/weather/index?format=2&cityname=" + countyName + "&key=d4ffbe5903dd7f4ff8bc8dcbf25e73e9";
