@@ -31,9 +31,7 @@ public class WeatherActivity extends Activity {
 	// 用于显示天气描述信息
 	private TextView weatherDespText;
 	// 用于显示当前温度
-	private TextView temp1Text;
-	// 用于显示温度范围
-	private TextView temp2Text;
+	private TextView tempText;
 	// 用于显示当前日期
 	private TextView currentDateText;
 
@@ -47,8 +45,7 @@ public class WeatherActivity extends Activity {
 		cityNameText = (TextView) findViewById(R.id.city_name);
 		publishText = (TextView) findViewById(R.id.publish_text);
 		weatherDespText = (TextView) findViewById(R.id.weather_desp);
-		temp1Text = (TextView) findViewById(R.id.temp1);
-		temp2Text = (TextView) findViewById(R.id.temp2);
+		tempText = (TextView) findViewById(R.id.temp);
 		currentDateText = (TextView) findViewById(R.id.current_date);
 		String countyName = getIntent().getStringExtra("county_name");
 
@@ -69,7 +66,7 @@ public class WeatherActivity extends Activity {
 	// 查询县级名称所对应的天气
 	private void queryWeather(String countyName) {
 		Log.d("tag", "queryWeather");
-		String address = "http://v.juhe.cn/weather/index?format=2&cityname=" + countyName + "&key=d4ffbe5903dd7f4ff8bc8dcbf25e73e9";
+		String address = "http://op.juhe.cn/onebox/weather/query?cityname=" + countyName + "&key=ee9ab03b377c948ccf7c5fd3cdc9f88e";
 		queryWeatherFromServer(address);
 	}
 
@@ -115,8 +112,7 @@ public class WeatherActivity extends Activity {
 	private void showWeather() {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		cityNameText.setText(prefs.getString("city_name", ""));
-		temp1Text.setText(prefs.getString("temp1", "") + "°C");
-		temp2Text.setText(prefs.getString("temp2", ""));
+		tempText.setText(prefs.getString("temp", "") + "°C");
 		weatherDespText.setText(prefs.getString("weather_desp", ""));
 		publishText.setText("今天" + prefs.getString("publish_time", "") + "发布");
 		currentDateText.setText(prefs.getString("current_date", ""));
