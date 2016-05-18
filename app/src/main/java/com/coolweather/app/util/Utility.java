@@ -74,7 +74,7 @@ public class Utility {
 				JSONArray jsonArray = jsonObject.getJSONArray("result");
 				for (int i = 0; i < jsonArray.length(); i++) {
 					City city = new City();
-					//比较2个字符串用    A.equals(B)
+					// 比较2个字符串用 A.equals(B)
 					if (jsonArray.getJSONObject(i).getString("province").equals(provinceName)) {
 						city.setCityName(jsonArray.getJSONObject(i).getString("city"));
 						city.setProvinceName(provinceName);
@@ -105,7 +105,7 @@ public class Utility {
 				JSONArray jsonArray = jsonObject.getJSONArray("result");
 				for (int i = 0; i < jsonArray.length(); i++) {
 					County county = new County();
-					//比较2个字符串用    A.equals(B)
+					// 比较2个字符串用 A.equals(B)
 					if (jsonArray.getJSONObject(i).getString("city").equals(cityName)) {
 						county.setCountyName(jsonArray.getJSONObject(i).getString("district"));
 						county.setCityName(cityName);
@@ -164,8 +164,7 @@ public class Utility {
 
 	/* 将服务器返回的所有天气信息存储到SharedPreferences文件中 */
 	// SharedPreferences是Android平台上一个轻量级的存储类，用来保存应用的一些常用配置
-	private static void saveWeatherInfo(Context context, String cityName,  String temp, String weatherDesp,
-			String publishTime) {
+	private static void saveWeatherInfo(Context context, String cityName, String temp, String weatherDesp, String publishTime) {
 		Log.d("tag", "saveWeatherInfo");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();

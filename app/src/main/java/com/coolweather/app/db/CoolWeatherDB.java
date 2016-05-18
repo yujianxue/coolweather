@@ -73,18 +73,17 @@ public class CoolWeatherDB {
 	/* 从数据库读取全国所有的省份信息 */
 	public List<Province> loadProvince() {
 		List<Province> list = new ArrayList<Province>();
-		//-----------------写死，避免使用付费api------------------
-		//boolean flagP=false;//在线查询
-		boolean flagP=true;//写死查询
-		if (flagP)
-		{
-			Province province1=new Province();
+		// -----------------写死，避免使用付费api------------------
+		// boolean flagP=false;//在线查询
+		boolean flagP = true;// 写死查询
+		if (flagP) {
+			Province province1 = new Province();
 			province1.setId(1);
 			province1.setProvinceName("北京");
 			list.add(province1);
 			return list;
 		}
-		//-----------------写死，避免使用付费api------------------
+		// -----------------写死，避免使用付费api------------------
 
 		Cursor cursor = db.query("Province", null, null, null, null, null, null);
 		if (cursor.moveToFirst()) {
@@ -138,11 +137,10 @@ public class CoolWeatherDB {
 	public List<City> loadCities(String provinceName) {
 		Log.d("tag", "loadCities");
 		List<City> list = new ArrayList<City>();
-		//-----------------写死，避免使用付费api------------------
-		//boolean flagP=false;//在线查询
-		boolean flagP=true;//写死查询
-		if (flagP)
-		{
+		// -----------------写死，避免使用付费api------------------
+		// boolean flagP=false;//在线查询
+		boolean flagP = true;// 写死查询
+		if (flagP) {
 			City city1 = new City();
 			city1.setId(1);
 			city1.setCityName("北京");
@@ -150,7 +148,7 @@ public class CoolWeatherDB {
 			list.add(city1);
 			return list;
 		}
-		//-----------------写死，避免使用付费api------------------
+		// -----------------写死，避免使用付费api------------------
 
 		/*
 		 * public Cursor query （boolean distinct， String table， String[]
@@ -220,11 +218,10 @@ public class CoolWeatherDB {
 	public List<County> loadCounties(String cityName) {
 		Log.d("tag", "loadCounties");
 		List<County> list = new ArrayList<County>();
-		//-----------------写死，避免使用付费api------------------
-		//boolean flagP=false;//在线查询
-		boolean flagP=true;//写死查询
-		if (flagP)
-		{
+		// -----------------写死，避免使用付费api------------------
+		// boolean flagP=false;//在线查询
+		boolean flagP = true;// 写死查询
+		if (flagP) {
 			County county1 = new County();
 			county1.setId(1);
 			county1.setCountyName("北京");
@@ -242,7 +239,7 @@ public class CoolWeatherDB {
 			list.add(county3);
 			return list;
 		}
-		//-----------------写死，避免使用付费api------------------
+		// -----------------写死，避免使用付费api------------------
 		Cursor cursor = db.query("County", null, "city_name=?", new String[] { cityName }, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
