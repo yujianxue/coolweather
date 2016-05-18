@@ -74,8 +74,8 @@ public class CoolWeatherDB {
 	public List<Province> loadProvince() {
 		List<Province> list = new ArrayList<Province>();
 		//-----------------写死，避免使用付费api------------------
-		boolean flagP=false;//在线查询
-		//boolean flagP=true;//写死查询
+		//boolean flagP=false;//在线查询
+		boolean flagP=true;//写死查询
 		if (flagP)
 		{
 			Province province1=new Province();
@@ -139,8 +139,8 @@ public class CoolWeatherDB {
 		Log.d("tag", "loadCities");
 		List<City> list = new ArrayList<City>();
 		//-----------------写死，避免使用付费api------------------
-		boolean flagP=false;//在线查询
-		//boolean flagP=true;//写死查询
+		//boolean flagP=false;//在线查询
+		boolean flagP=true;//写死查询
 		if (flagP)
 		{
 			City city1 = new City();
@@ -221,8 +221,8 @@ public class CoolWeatherDB {
 		Log.d("tag", "loadCounties");
 		List<County> list = new ArrayList<County>();
 		//-----------------写死，避免使用付费api------------------
-		boolean flagP=false;//在线查询
-		//boolean flagP=true;//写死查询
+		//boolean flagP=false;//在线查询
+		boolean flagP=true;//写死查询
 		if (flagP)
 		{
 			County county1 = new County();
