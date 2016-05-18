@@ -150,7 +150,6 @@ public class Utility {
 			JSONObject data = result.getJSONObject("data");
 			JSONObject realtime = data.getJSONObject("realtime");
 			JSONObject weather = realtime.getJSONObject("weather");
-
 			String cityName = realtime.getString("city_name");
 			String temp = weather.getString("temperature");
 			String weatherDesp = weather.getString("info");

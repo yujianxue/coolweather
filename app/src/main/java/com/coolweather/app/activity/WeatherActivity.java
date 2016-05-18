@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coolweather.app.R;
+import com.coolweather.app.service.AutoUpdateService;
 import com.coolweather.app.util.HttpCallbackListener;
 import com.coolweather.app.util.HttpUtil;
 import com.coolweather.app.util.Utility;
@@ -60,7 +61,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
 		refreshWeather.setOnClickListener(this);
 
 		if (!TextUtils.isEmpty(countyName)) {
-
+			// 直接从上一级跳转过来的才会有传递的countyName
 			// 有县级名称就去查询天气
 			publishText.setText("同步中…");
 			weatherInfoLayout.setVisibility(View.INVISIBLE);
@@ -68,7 +69,9 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
 			queryWeather(countyName);
 
 		} else {
-			// 没有县级代号是就直接显示本地天气
+			// 当关掉进程，由于定时更新服务的开启，点击软件按钮，进入直接从上次服务保存的数据中,从而showWeather
+			// 此时县级名称即为null
+			// 没有县级名称就直接显示本地天气
 			showWeather();
 		}
 
@@ -85,13 +88,33 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
 	private void queryWeatherFromServer(final String address) {
 		Log.d("tag", "queryWeatherFromServer");
 		// String response = "
-		// {\"resultcode\":\"200\",\"reason\":\"successed!\",\"result\":{\"sk\":{\"temp\":\"27\",\"wind_direction\":\"西风\",\"wind_strength\":\"2级\",\"humidity\":\"24%\",\"time\":\"11:18\"},\"today\":{\"temperature\":\"18℃~30℃\",\"weather\":\"晴\",\"weather_id\":{\"fa\":\"00\",\"fb\":\"00\"},\"wind\":\"西南风3-4
-		// 级\",\"week\":\"星期一\",\"city\":\"天津\",\"date_y\":\"2016年05月16日\",\"dressing_index\":\"热\",\"dressing_advice\":\"天气热，建议着短裙、短裤、短薄外套、T恤等夏季服装。\",\"uv_index\":\"很强\",\"comfort_index\":\"\",\"wash_index\":\"较适宜\",\"travel_index\":\"较适宜\",\"exercise_index\":\"较适宜\",\"drying_index\":\"\"},\"future\":[{\"temperature\":\"18℃~30℃\",\"weather\":\"晴\",\"weather_id\":{\"fa\":\"00\",\"fb\":\"00\"},\"wind\":\"西南风3-4
-		// 级\",\"week\":\"星期一\",\"date\":\"20160516\"},{\"temperature\":\"19℃~32℃\",\"weather\":\"晴转多云\",\"weather_id\":{\"fa\":\"00\",\"fb\":\"01\"},\"wind\":\"西南风3-4
-		// 级\",\"week\":\"星期二\",\"date\":\"20160517\"},{\"temperature\":\"18℃~29℃\",\"weather\":\"阴\",\"weather_id\":{\"fa\":\"02\",\"fb\":\"02\"},\"wind\":\"南风3-4
-		// 级\",\"week\":\"星期三\",\"date\":\"20160518\"},{\"temperature\":\"18℃~28℃\",\"weather\":\"多云\",\"weather_id\":{\"fa\":\"01\",\"fb\":\"01\"},\"wind\":\"东南风微风\",\"week\":\"星期四\",\"date\":\"20160519\"},{\"temperature\":\"18℃~28℃\",\"weather\":\"阴\",\"weather_id\":{\"fa\":\"02\",\"fb\":\"02\"},\"wind\":\"东南风微风\",\"week\":\"星期五\",\"date\":\"20160520\"},{\"temperature\":\"19℃~32℃\",\"weather\":\"晴转多云\",\"weather_id\":{\"fa\":\"00\",\"fb\":\"01\"},\"wind\":\"西南风3-4
-		// 级\",\"week\":\"星期六\",\"date\":\"20160521\"},{\"temperature\":\"18℃~29℃\",\"weather\":\"阴\",\"weather_id\":{\"fa\":\"02\",\"fb\":\"02\"},\"wind\":\"南风3-4
-		// 级\",\"week\":\"星期日\",\"date\":\"20160522\"}]},\"error_code\":0}";
+		// {"reason":"successed!","result":{"data":{"realtime":{"wind":{"windspeed":"8.0","direct":"东南风","power":"1级","offset":null},
+		// "time":"14:00:00","weather":{"humidity":"74","img":"2","info":"阴","temperature":"19"},
+		// "dataUptime":1463554270,"date":"2016-05-18","city_code":"101210701","city_name":"温州","week":3,"moon":"四月十二"},
+		// "life":{"date":"2016-5-18","info":{"kongtiao":["较少开启","您将感到很舒适，一般不需要开启空调。"],
+		// "yundong":["较适宜","天气较好，户外运动请注意防晒。推荐您进行室内运动。"],
+		// "ziwaixian":["弱","紫外线强度较弱，建议出门前涂擦SPF在12-15之间、PA+的防晒护肤品。"],
+		// "ganmao":["少发","各项气象条件适宜，无明显降温过程，发生感冒机率较低。"],
+		// "xiche":["较适宜","较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。"],
+		// "wuran":["中","气象条件对空气污染物稀释、扩散和清除无明显影响，易感人群应适当减少室外活动时间。"],
+		// "chuanyi":["舒适","建议着长袖T恤、衬衫加单裤等服装。年老体弱者宜着针织长袖衬衫、马甲和长裤。"]}},
+		// "weather":[{"date":"2016-05-18","info":{"night":["1","多云","17","东北风","微风","18:41"],
+		// "day":["1","多云","25","东北风","微风","05:05"]},"week":"三","nongli":"四月十二"},
+		// {"date":"2016-05-19","info":{"dawn":["1","多云","17","东北风","微风","18:41"],
+		// "night":["2","阴","19","东北风","微风","18:42"],"day":["1","多云","27","东北风","微风","05:05"]},
+		// "week":"四","nongli":"四月十三"},{"date":"2016-05-20","info":{"dawn":["2","阴","19","东北风","微风","18:42"],
+		// "night":["3","阵雨","20","东北风","微风","18:43"],"day":["3","阵雨","24","东北风","微风","05:04"]},"week":"五","nongli":"四月十四"},
+		// {"date":"2016-05-21","info":{"dawn":["3","阵雨","20","东北风","微风","18:43"],"night":["8","中雨","20","东北风","微风","18:43"],
+		// "day":["3","阵雨","25","东北风","微风","05:04"]},"week":"六","nongli":"四月十五"},{"date":"2016-05-22",
+		// "info":{"dawn":["8","中雨","20","东北风","微风","18:43"],"night":["3","阵雨","21","东北风","微风","18:44"],
+		// "day":["3","阵雨","27","东北风","微风","05:04"]},"week":"日","nongli":"四月十六"},
+		// {"date":"2016-05-23","info":{"night":["2","阴","19","东南风","微风","19:30"],
+		// "day":["1","多云","27","东南风","微风","07:30"]},"week":"一","nongli":"四月十七"},
+		// {"date":"2016-05-24","info":{"night":["3","阵雨","19","东北风","微风","19:30"],
+		// "day":["3","阵雨","27","东北风","微风","07:30"]},"week":"二","nongli":"四月十八"}],
+		// "pm25":{"key":"","show_desc":0,"pm25":{"curPm":"50","pm25":"27","pm10":"50","level":1,
+		// "quality":"优","des":"今天的空气质量令人满意，各类人群可正常活动。"},
+		// "dateTime":"2016年05月18日14时","cityName":"温州"},"date":null,"isForeign":0}},"error_code":0}
 
 		HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
 
@@ -126,6 +149,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
 
 	// 从SharePreferences文件中读取存储的天气信息，并显示到界面上
 	private void showWeather() {
+		Log.d("tag", "showWeather");
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		cityNameText.setText(prefs.getString("city_name", ""));
 		tempText.setText(prefs.getString("temp", "") + "°C");
@@ -134,6 +158,9 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
 		currentDateText.setText(prefs.getString("current_date", ""));
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
+		// 开启定时服务
+		Intent intent = new Intent(this, AutoUpdateService.class);
+		startService(intent);
 	}
 
 	@Override
@@ -148,7 +175,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
 		case R.id.refresh_weather:
 			publishText.setText("同步中…");
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-			String countyName = prefs.getString("city_name", "");//注意这里键是city_name,这里pres之前保存的是界面显示各种信息
+			String countyName = prefs.getString("city_name", "");// 注意这里键是city_name,这里pres之前保存的是界面显示各种信息
 			if (!TextUtils.isEmpty(countyName)) {
 				queryWeather(countyName);
 				break;
