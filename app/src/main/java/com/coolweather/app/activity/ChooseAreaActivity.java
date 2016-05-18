@@ -114,7 +114,9 @@ public class ChooseAreaActivity extends Activity {
 			titleText.setText("中国");
 			currentLevel = LEVEL_PROVINCE;
 		} else {
-			queryFromServer(null, "province");
+			queryFromServer(null, "province");//避免多余的使用天气api，可先注释掉
+
+
 		}
 	}
 

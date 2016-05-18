@@ -24,12 +24,6 @@ public class Province {
 		this.provinceName = provinceName;
 	}
 
-	/*public void setProvinceCode(String provinceCode) {
-		this.provinceCode = provinceCode;
-	}
 
-	public String getProvinceCode() {
-		return provinceCode;
-	}*/
 
 }

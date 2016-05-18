@@ -73,26 +73,27 @@ public class CoolWeatherDB {
 	/* 从数据库读取全国所有的省份信息 */
 	public List<Province> loadProvince() {
 		List<Province> list = new ArrayList<Province>();
+		//-----------------写死，避免使用付费api------------------
+		boolean flagP=true;
+		if (flagP)
+		{
+			Province province1=new Province();
+			province1.setId(1);
+			province1.setProvinceName("北京");
+			list.add(province1);
+			return list;
+		}
+		//-----------------写死，避免使用付费api------------------
+
 		Cursor cursor = db.query("Province", null, null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				Province province = new Province();
 				province.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				province.setProvinceName(cursor.getString(cursor.getColumnIndex("province_name")));
-				// province.setProvinceCode(cursor.getString(cursor.getColumnIndex("province_code")));
 				list.add(province);
 			} while (cursor.moveToNext());
 		}
-		/*
-		 * //测试用 Province province1 = new Province(); province1.setId(0);
-		 * province1.setProvinceName("北京"); province1.setProvinceCode("01");
-		 * list.add(province1); Province province2 = new Province();
-		 * province2.setId(1); province2.setProvinceName("上海");
-		 * province2.setProvinceCode("02"); list.add(province2); Province
-		 * province3 = new Province(); province3.setId(2);
-		 * province3.setProvinceName("天津"); province3.setProvinceCode("03");
-		 * list.add(province3);
-		 */
 
 		if (cursor != null) {
 			cursor.close();
@@ -136,6 +137,19 @@ public class CoolWeatherDB {
 	public List<City> loadCities(String provinceName) {
 		Log.d("tag", "loadCities");
 		List<City> list = new ArrayList<City>();
+		//-----------------写死，避免使用付费api------------------
+		boolean flagP=true;
+		if (flagP)
+		{
+			City city1 = new City();
+			city1.setId(1);
+			city1.setCityName("北京");
+			city1.setProvinceName("北京");
+			list.add(city1);
+			return list;
+		}
+		//-----------------写死，避免使用付费api------------------
+
 		/*
 		 * public Cursor query （boolean distinct， String table， String[]
 		 * columns， String selection， String[] selectionArgs， String groupBy，
@@ -204,6 +218,28 @@ public class CoolWeatherDB {
 	public List<County> loadCounties(String cityName) {
 		Log.d("tag", "loadCounties");
 		List<County> list = new ArrayList<County>();
+		//-----------------写死，避免使用付费api------------------
+		boolean flagP=true;
+		if (flagP)
+		{
+			County county1 = new County();
+			county1.setId(1);
+			county1.setCountyName("北京");
+			county1.setCityName("北京");
+			list.add(county1);
+			County county2 = new County();
+			county2.setId(2);
+			county2.setCountyName("海淀");
+			county2.setCityName("北京");
+			list.add(county2);
+			County county3 = new County();
+			county3.setId(3);
+			county3.setCountyName("朝阳");
+			county3.setCityName("北京");
+			list.add(county3);
+			return list;
+		}
+		//-----------------写死，避免使用付费api------------------
 		Cursor cursor = db.query("County", null, "city_name=?", new String[] { cityName }, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
