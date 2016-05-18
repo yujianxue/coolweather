@@ -147,18 +147,15 @@ public class Utility {
 		try {
 			JSONObject jsonObject = new JSONObject(response);
 			JSONObject result = jsonObject.getJSONObject("result");
-			JSONObject sk = result.getJSONObject("sk");
-			JSONObject today = result.getJSONObject("today");
-			// String weatherCode = weatherInfo.getString("cityid");
-			String cityName = today.getString("city");
-			String temp1 = sk.getString("temp");
-			String temp2 = today.getString("temperature");
-			String weatherDesp = today.getString("weather");
-			String publishTime = sk.getString("time");
-			Log.d("tag", publishTime);
-			saveWeatherInfo(context, cityName, temp1, temp2, weatherDesp, publishTime);
-			// saveWeatherInfo(context, cityName, weatherCode, temp1, temp2,
-			// weatherDesp, publishTime)
+			JSONObject data = result.getJSONObject("data");
+			JSONObject realtime = data.getJSONObject("realtime");
+			JSONObject weather = realtime.getJSONObject("weather");
+			String cityName = realtime.getString("city_name");
+			String temp = weather.getString("temperature");
+			String weatherDesp = weather.getString("info");
+			String publishTime = realtime.getString("time");
+			saveWeatherInfo(context, cityName, temp, weatherDesp, publishTime);
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -167,16 +164,14 @@ public class Utility {
 
 	/* 将服务器返回的所有天气信息存储到SharedPreferences文件中 */
 	// SharedPreferences是Android平台上一个轻量级的存储类，用来保存应用的一些常用配置
-	private static void saveWeatherInfo(Context context, String cityName, String temp1, String temp2, String weatherDesp,
+	private static void saveWeatherInfo(Context context, String cityName,  String temp, String weatherDesp,
 			String publishTime) {
 		Log.d("tag", "saveWeatherInfo");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putBoolean("city_selected", true);
 		editor.putString("city_name", cityName);
-		// editor.putString("weather_code", weatherCode);//可不用
-		editor.putString("temp1", temp1);
-		editor.putString("temp2", temp2);
+		editor.putString("temp", temp);
 		editor.putString("weather_desp", weatherDesp);
 		editor.putString("publish_time", publishTime);
 		editor.putString("current_date", sdf.format(new Date()));
